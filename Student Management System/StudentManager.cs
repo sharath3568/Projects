@@ -18,11 +18,6 @@ namespace Student_Management_System
 
         public bool AddStudent(Student student)
         {
-            if (FindStudentById(student.StudentID) != null) 
-            {
-                return false;
-            }
-
             for (int i = 0; i < students.Length; i++)
             {
                 if (students[i] == null)
@@ -34,9 +29,14 @@ namespace Student_Management_System
             return false;
         }
 
-        public Student ViewStudent(Guid studentID)
+        public bool HasCapacity()
         {
-            return FindStudentById(studentID);
+            return students.Contains(null);
+        }
+
+        public Student[] ViewStudent(string studentName, int studentAge)
+        {
+            return FindStudentByNameAge(studentName,studentAge);
         }
 
         public bool UpdateStudent(Guid studentID, string newName,int newAge, float newMarks)
@@ -54,11 +54,11 @@ namespace Student_Management_System
             return false;
         }
 
-        public bool DeleteStudent(Guid studentID)
+        public bool DeleteStudent(string studentName, int studentAge)
         {
             for (int i = 0; i < students.Length; i++)
             {
-                if (students[i] != null && students[i].StudentID == studentID)
+                if (students[i] != null && students[i].Name.Equals(studentName) && students[i].Age.Equals(studentAge))
                 {
                     students[i] = null;
                     return true;
@@ -67,16 +67,17 @@ namespace Student_Management_System
             return false;
         }
 
-        private Student? FindStudentById(Guid studentID)
+        private Student[] FindStudentByNameAge(string studentName, int studentAge)
         {
+            Student[] studentDetails = new Student[students.Length];
             for(int i = 0; i < students.Length; i++)
             {
-                if (students[i] != null && students[i].StudentID.Equals(studentID))
+                if (students[i] != null && students[i].Name.Equals(studentName) && students[i].Age.Equals(studentAge))
                 {
-                    return students[i];
+                    studentDetails[i] = students[i];
                 }
             }
-            return null;
+            return studentDetails;
         }
     }
 }

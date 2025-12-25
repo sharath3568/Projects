@@ -64,11 +64,6 @@ namespace Student_Management_System
                 Marks = marks;
             }
         }
-
-        public void ViewStudent()
-        {
-            Console.WriteLine($"Student ID : {StudentID}\nName : {Name}\nAge : {Age}\nGender : {Gender}\nMarks : {Marks}");
-        }
     }
 }
 
