@@ -8,7 +8,7 @@ namespace Student_Management_System
         static void Main(string[] args)
         {
             int count = 0;
-            bool isLimitExceeded = false;
+            bool hasCapacity = true;
             bool isRepeat = true;
             Console.Write("Enter the Count of the students data : ");
             while (true)
@@ -25,20 +25,20 @@ namespace Student_Management_System
             StudentManager student = new StudentManager(count);
             while (isRepeat)
             {
-                int operation = SelectOperation(isLimitExceeded);
+                int operation = SelectOperation(hasCapacity);
                 switch (operation)
                 {
                     case 1:
-                        isLimitExceeded = AddStudent(student);
+                        hasCapacity = AddStudent(student);
                         break;
                     case 2:
                         ViewStudent(student);
                         break;
                     case 3:
-                        //UpdateStudent();
+                        UpdateStudent(student);
                         break;
                     case 4:
-                        //DeleteStudent();
+                        DeleteStudent(student);
                         break;
                     case 5:
                         Console.WriteLine("\nExiting Program................");
@@ -48,9 +48,9 @@ namespace Student_Management_System
             }
         }
 
-        public static int SelectOperation(bool isLimitExceeded)
+        public static int SelectOperation(bool hasCapacity)
         {
-            if (isLimitExceeded)
+            if (hasCapacity)
             {
                 Console.WriteLine("\n1.Add New Student\n2.View Student details\n3.Update Student details\n4.Delete Student\n5.Exit\n");
             }
@@ -159,14 +159,44 @@ namespace Student_Management_System
             }
         }
 
+        public static string CheckStudentID()
+        {
+            Console.Write("Enter Student ID : ");
+            while (true)
+            {
+                string studentID = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(studentID))
+                {
+                    return studentID;
+                }
+                else
+                {
+                    Console.Write("Invalid Student ID! Please try again : ");
+                }
+            }
+        }
+
+        public static void ViewStudentDetails(StudentManager student,string studentID)
+        {
+
+            Student studentDetails = student.ViewStudent(studentID);
+
+            if (studentDetails == null)
+            {
+                Console.WriteLine("\nNo matching student found");
+                return;
+            }
+
+            Console.WriteLine($"\nStudent ID : {studentDetails.StudentID}\nStudent Name : {studentDetails.Name}\nStudent Age : {studentDetails.Age}\nStudent Marks : {studentDetails.Marks}");
+        }
+
         public static bool AddStudent(StudentManager student)
         {
 
-            bool response = student.HasCapacity();
-            if (response)
+            bool hasCapacity = student.HasCapacity();
+            if (hasCapacity)
             {
                 Console.WriteLine("\nEnter the details\n");
-                Guid studentID = Guid.NewGuid();
 
                 Console.Write("Student Name : ");
                 string studentName = CheckValid<string>();
@@ -180,40 +210,69 @@ namespace Student_Management_System
                 Console.Write("Student Marks : ");
                 float studentMarks = CheckValid<float>();
 
-                Student studentDetails = new Student(studentID, studentName, studentAge, studentGender, studentMarks);
-                response = student.AddStudent(studentDetails);
+                Student studentDetails = new Student(studentName, studentAge, studentGender, studentMarks);
+                bool response = student.AddStudent(studentDetails);
+
+                if (response)
+                {
+                    Console.WriteLine($"\nStudent Details added successfully with student ID : {studentDetails.StudentID}");
+                }
+                else
+                {
+                    Console.WriteLine("Student details did not added! Please try again");
+                }
+                return hasCapacity;
             }
             else 
             {
                 Console.WriteLine("\nAddition of the students limit exceeded!");
-                return response;
+                return hasCapacity;
             }
-            return response;
         }
 
         public static void ViewStudent(StudentManager student)
         {
-            Console.Write("Enter student name : ");
+            string studentID = CheckStudentID();
+            ViewStudentDetails(student, studentID);
+        }
+
+        public static void UpdateStudent(StudentManager student)
+        {
+            string studentID = CheckStudentID();
+            Console.Write("\nEnter Updated Student Name : ");
             string studentName = CheckValid<string>();
-            Console.Write("Enter student age : ");
+            Console.Write("Enter Updated Student Age : ");
             int studentAge = CheckValid<int>();
+            Console.Write("Enter Updated Student Marks : ");
+            float studentMarks = CheckValid<float>();
+            Console.Write("Enter Updated Student Gender : ");
+            Gender studentGender = GetGender();
+            bool isUpdated = student.UpdateStudent(studentID,studentName, studentAge, studentMarks, studentGender);
 
-            Student[] studentDetails = student.ViewStudent(studentName, studentAge);
-
-            bool found = false;
-            foreach(var studentList in studentDetails)
+            if (isUpdated)
             {
-                if (studentList == null) continue;
-
-                found = true;
-
-                Console.WriteLine($"Student ID : {studentList.StudentID}\nStudent Name : {studentList.Name}\nStudent Age : {studentList.Age}\nStudent Marks : {studentList.Marks}");
-                Console.WriteLine("\n");
+                Console.WriteLine("\nUpdated Student Details Successfully");
+                ViewStudentDetails(student, studentID);
             }
-
-            if (!found)
+            else
             {
-                Console.WriteLine("No matching student found");
+                Console.WriteLine("\nStudent Details not updated! Please try again");
+            }
+        }
+
+        public static void DeleteStudent(StudentManager student)
+        {
+            string studentID = CheckStudentID();
+
+            bool isDeleted = student.DeleteStudent(studentID);
+
+            if (isDeleted)
+            {
+                Console.WriteLine($"Student ID : {studentID.ToUpper()} Deleted Successfully...");
+            }
+            else
+            {
+                Console.WriteLine($"Student ID : {studentID} is not found");
             }
         }
     }

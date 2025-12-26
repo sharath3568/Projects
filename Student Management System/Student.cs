@@ -9,19 +9,26 @@ namespace Student_Management_System
 {
     public class Student
     {
-        public Guid StudentID { get; } // ✅ Identity: set once, never changed
+        public string StudentID { get; private set; } // ✅ Identity: set once, never changed
         public string Name { get; private set; } // ✅ Readable outside, writable only inside class
         public int Age { get; private set; }
         public Gender Gender { get; private set; }
         public float Marks { get; private set; }
 
-        public Student(Guid studentId, string name, int age, Gender gender, float marks)
+        public Student(string name, int age, Gender gender, float marks)
         {
-            StudentID = studentId;
             SetName(name);
             SetAge(age);
             SetGender(gender);
             SetMarks(marks);
+        }
+
+        public string? setStudentID
+        {
+            set
+            {
+                this.StudentID = value;
+            }
         }
 
         public void SetAge(int age)

@@ -22,6 +22,7 @@ namespace Student_Management_System
             {
                 if (students[i] == null)
                 {
+                    student.setStudentID = "STU" + (i + 1);
                     students[i] = student;
                     return true;
                 }
@@ -34,31 +35,34 @@ namespace Student_Management_System
             return students.Contains(null);
         }
 
-        public Student[] ViewStudent(string studentName, int studentAge)
+        public Student ViewStudent(string? studentID)
         {
-            return FindStudentByNameAge(studentName,studentAge);
+            return FindStudentById(studentID);
         }
 
-        public bool UpdateStudent(Guid studentID, string newName,int newAge, float newMarks)
+        public bool UpdateStudent(string? studentID,string newName, int newAge, float newMarks, Gender newGender)
         {
+            Student student = FindStudentById(studentID);
+            if (student == null)
+                return false;
+
+            student.SetName(newName);
+            student.SetAge(newAge);
+            student.SetMarks(newMarks);
+            student.SetGender(newGender);
+            return true;
+        }
+
+        public bool DeleteStudent(string studentID)
+        {
+            studentID = studentID.ToUpper();
+            Student student = FindStudentById(studentID);
+            if (student == null)
+                return false;
+
             for (int i = 0; i < students.Length; i++)
             {
                 if (students[i] != null && students[i].StudentID == studentID)
-                {
-                    students[i].SetName(newName);
-                    students[i].SetAge(newAge);
-                    students[i].SetMarks(newMarks);
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public bool DeleteStudent(string studentName, int studentAge)
-        {
-            for (int i = 0; i < students.Length; i++)
-            {
-                if (students[i] != null && students[i].Name.Equals(studentName) && students[i].Age.Equals(studentAge))
                 {
                     students[i] = null;
                     return true;
@@ -67,17 +71,15 @@ namespace Student_Management_System
             return false;
         }
 
-        private Student[] FindStudentByNameAge(string studentName, int studentAge)
+        private Student? FindStudentById(string id)
         {
-            Student[] studentDetails = new Student[students.Length];
-            for(int i = 0; i < students.Length; i++)
+            id = id.ToUpper();
+            for (int i = 0; i < students.Length; i++)
             {
-                if (students[i] != null && students[i].Name.Equals(studentName) && students[i].Age.Equals(studentAge))
-                {
-                    studentDetails[i] = students[i];
-                }
+                if (students[i] != null && students[i].StudentID == id)
+                    return students[i];
             }
-            return studentDetails;
+            return null;
         }
     }
 }
