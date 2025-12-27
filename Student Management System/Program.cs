@@ -93,7 +93,7 @@ namespace Student_Management_System
                     }
                     else
                     {
-                        Console.WriteLine("Invalid Input! Please try again");
+                        Console.Write("Invalid Input! Please try again");
                     }
 
                 }
@@ -178,7 +178,6 @@ namespace Student_Management_System
 
         public static void ViewStudentDetails(StudentManager student,string studentID)
         {
-
             Student studentDetails = student.ViewStudent(studentID);
 
             if (studentDetails == null)

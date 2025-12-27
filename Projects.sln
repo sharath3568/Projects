@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Student Management System",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Console App", "Console App", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library Book Management System", "Library Book Management System\Library Book Management System.csproj", "{7ECADCF1-2D31-4057-AB64-D2815FB8AA8E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{954B9E65-2EB8-4520-B25E-0BDF406E45F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{954B9E65-2EB8-4520-B25E-0BDF406E45F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{954B9E65-2EB8-4520-B25E-0BDF406E45F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7ECADCF1-2D31-4057-AB64-D2815FB8AA8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ECADCF1-2D31-4057-AB64-D2815FB8AA8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ECADCF1-2D31-4057-AB64-D2815FB8AA8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ECADCF1-2D31-4057-AB64-D2815FB8AA8E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -30,6 +36,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{73DEA4F3-B2AB-4040-91D4-ECFFA7C92916} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{954B9E65-2EB8-4520-B25E-0BDF406E45F6} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{7ECADCF1-2D31-4057-AB64-D2815FB8AA8E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {290A562B-5343-4010-A650-F07EF8CB2F41}
