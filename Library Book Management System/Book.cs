@@ -15,20 +15,17 @@ namespace Library_Book_Management_System
         public Category Category { get; private set; }
         public bool IsAvailable { get; set; }
 
-        public Book(string title, string author, Category category, bool isAvailable)
+        public Book(string title, string author, Category category)
         {
             this.Title = title;
             this.Author = author;
             this.Category = category;
-            this.IsAvailable = isAvailable;
+            this.IsAvailable = true;
         }
 
-        public string? SetBookID
+        internal void SetBookID(string bookID)
         {
-            set
-            {
-                this.BookID = value;
-            }
+            BookID = bookID;
         }
     }
 

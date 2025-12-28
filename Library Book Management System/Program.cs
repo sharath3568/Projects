@@ -40,18 +40,15 @@ namespace Library_Book_Management_System
                         ViewBookByID(bookManager);
                         break;
                     case 4:
-                        //IssueBook(bookManager);
+                        IssueBook(bookManager);
                         break;
                     case 5:
-                        //ReturnBook(bookManager);
+                        ReturnBook(bookManager);
                         break;
                     case 6:
-                        //UpdateBook(bookManager);
+                        DeleteBook(bookManager);
                         break;
                     case 7:
-                        //DeleteBook(bookManager);
-                        break;
-                    case 8:
                         Console.WriteLine("\nExiting Program............");
                         return;
                 }
@@ -64,11 +61,11 @@ namespace Library_Book_Management_System
         {
             if (hasCapacity)
             {
-                Console.WriteLine("\n1.Add Book\n2.View Book List\n3.View Book by ID\n4.Issue Book\n5.Return Book\n6.Update Book\n7.Delete Book\n8.Exit");
+                Console.WriteLine("\n1.Add Book\n2.View Book List\n3.View Book by ID\n4.Issue Book\n5.Return Book\n6.Delete Book\n7.Exit");
             }
             else
             {
-                Console.WriteLine("\n2.View Book List\n3.View Book by ID\n4.Issue Book\n5.Return Book\n6.Update Book\n7.Delete Book\n8.Exit");
+                Console.WriteLine("\n2.View Book List\n3.View Book by ID\n4.Issue Book\n5.Return Book\n6.Delete Book\n7.Exit");
             }
             Console.Write("\nSelect the Operation you want to perform : ");
             while (true)
@@ -193,7 +190,7 @@ namespace Library_Book_Management_System
                 string? bookAuthor = CheckValid();
                 Category bookCategory = CheckCategory();
 
-                Book book = new Book(bookTitle, bookAuthor, bookCategory, true);
+                Book book = new Book(bookTitle, bookAuthor, bookCategory);
 
                 bool response = bookManager.AddBook(book);
 
@@ -232,11 +229,67 @@ namespace Library_Book_Management_System
         public static void ViewBookList(BookManager bookManager)
         {
             Book[] book = bookManager.ViewBooks();
-
-            Console.WriteLine("Book Details : \n");
             for (int i = 0; i < book.Length; i++)
             {
-                Console.WriteLine($"Book ID : {book[i].BookID}\nTitle : {book[i].Title}\nAuthor : {book[i].Author}\nCategory : {book[i].Category}\nAvailable : {book[i].IsAvailable}\n");
+                if (book[i] == null)
+                {
+                    Console.WriteLine("Book List is empty! Please Add some books");
+                }
+                else
+                {
+                    Console.WriteLine("Book Details : \n");
+                    for (int i = 0; i < book.Length; i++)
+                    {
+                        Console.WriteLine($"Book ID : {book[i].BookID}\nTitle : {book[i].Title}\nAuthor : {book[i].Author}\nCategory : {book[i].Category}\nAvailable : {book[i].IsAvailable}\n");
+                    }
+                }
+            }
+        }
+
+        public static void DeleteBook(BookManager bookManager)
+        {
+            string bookID = CheckBookID();
+
+            bool isDeleted = bookManager.DeleteBook(bookID);
+            if (isDeleted)
+            {
+                Console.WriteLine($"Deleted the Book ID : {bookID} Successfully");
+            }
+            else
+            {
+                Console.WriteLine($"Issue While Deleting the Book ID : {bookID}! Please try again");
+            }
+        }
+
+        public static void IssueBook(BookManager bookManager)
+        {
+            string bookID = CheckBookID();
+
+            bool isIssued = bookManager.IssueBook(bookID);
+
+            if (isIssued)
+            {
+                Console.WriteLine("\nBook Issued Successfully! Thank you...");
+            }
+            else
+            {
+                Console.WriteLine($"Provided Book ID : {bookID} is not found or is not avaiable! Please try again");
+            }
+        }
+
+        public static void ReturnBook(BookManager bookManager)
+        {
+            string bookID = CheckBookID();
+
+            bool isReturned = bookManager.ReturnBook(bookID);
+
+            if (isReturned)
+            {
+                Console.WriteLine("\nBook Returned Successfully! Thank you...");
+            }
+            else
+            {
+                Console.WriteLine($"Provided Book ID : {bookID} is not found! Please try again");
             }
         }
     }
