@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Library_Book_Management_System
+namespace Library_Book_Management_System.Entities
 {
     public class Book
     {
@@ -17,10 +17,10 @@ namespace Library_Book_Management_System
 
         public Book(string title, string author, Category category)
         {
-            this.Title = title;
-            this.Author = author;
-            this.Category = category;
-            this.IsAvailable = true;
+            Title = title;
+            Author = author;
+            Category = category;
+            IsAvailable = true;
         }
 
         internal void SetBookID(string bookID)

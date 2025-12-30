@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Library_Book_Management_System.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Library_Book_Management_System
+namespace Library_Book_Management_System.Managers
 {
     public class BookManager
     {

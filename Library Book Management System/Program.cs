@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.Design;
+﻿using Library_Book_Management_System.Entities;
+using Library_Book_Management_System.Managers;
+using System.ComponentModel.Design;
 using System.Globalization;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
