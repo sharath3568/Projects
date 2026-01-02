@@ -1,39 +1,38 @@
 ﻿using Library_Book_Management_System.Entities;
 using Library_Book_Management_System.Managers;
-using System.ComponentModel.Design;
-using System.Globalization;
-using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 
 namespace Library_Book_Management_System
 {
+    /// <summary>
+    /// Entry point of the Library Book Management System.
+    /// Handles user interaction and input validation.
+    /// </summary>
     internal class Program
     {
         static void Main(string[] args)
         {
-            int size = 0;
-            bool hasCapacity = true;
-            bool isRepeat = true;
+            int size;
+
+            // Get maximum number of books from user
             Console.Write("Enter the number of books you want to store : ");
-            while (true)
+            while (!int.TryParse(Console.ReadLine(), out size) || size <= 0)
             {
-                if (int.TryParse(Console.ReadLine(), out size) && size > 0)
-                {
-                    break;
-                }
-                else
-                {
-                    Console.Write("\nInvalid Input! Please try again : ");
-                }
+                Console.Write("Invalid Input! Please try again : ");
             }
+
             BookManager bookManager = new BookManager(size);
-            while (isRepeat)
+            bool repeat = true;
+
+            // Main application loop
+            while (repeat)
             {
-                int operation = SelectOperation(hasCapacity);
+                int operation = SelectOperation(bookManager.HasCapacity());
+
                 switch (operation)
                 {
                     case 1:
-                        hasCapacity = AddBook(bookManager);
+                        AddBook(bookManager);
                         break;
                     case 2:
                         ViewBookList(bookManager);
@@ -51,14 +50,17 @@ namespace Library_Book_Management_System
                         DeleteBook(bookManager);
                         break;
                     case 7:
-                        Console.WriteLine("\nExiting Program............");
+                        Console.WriteLine("Exiting Program...");
                         return;
                 }
-                isRepeat = CheckRepeat();
-            }
 
+                repeat = CheckRepeat();
+            }
         }
 
+        /// <summary>
+        /// Displays available operations and validates user choice.
+        /// </summary>
         public static int SelectOperation(bool hasCapacity)
         {
             if (hasCapacity)
@@ -69,153 +71,93 @@ namespace Library_Book_Management_System
             {
                 Console.WriteLine("\n2.View Book List\n3.View Book by ID\n4.Issue Book\n5.Return Book\n6.Delete Book\n7.Exit");
             }
-            Console.Write("\nSelect the Operation you want to perform : ");
-            while (true)
+            int choice;
+            Console.Write("Select the operation : ");
+
+            while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 7)
             {
-                if (int.TryParse(Console.ReadLine(), out int temp) && (temp > 0 && temp <= 7))
-                {
-                    return temp;
-                }
-                else
-                {
-                    Console.Write("\nInvalid Input! Please try again : ");
-                }
+                Console.Write("Invalid Input! Please try again : ");
             }
+            return choice;
         }
 
+        /// <summary>
+        /// Asks user whether they want to continue.
+        /// </summary>
         public static bool CheckRepeat()
         {
-            Console.Write("\nDo you want to continue! Please provide Yes/No : ");
+            Console.Write("Do you want to continue (Yes/No): ");
             while (true)
             {
-                string? input = Console.ReadLine();
+                string input = Console.ReadLine();
                 if (string.Equals(input, "Yes", StringComparison.OrdinalIgnoreCase))
-                {
                     return true;
-                }
-                else if (string.Equals(input, "No", StringComparison.OrdinalIgnoreCase))
-                {
-                    Console.WriteLine("\nExiting Program.............");
+
+                if (string.Equals(input, "No", StringComparison.OrdinalIgnoreCase))
                     return false;
-                }
-                else
-                {
-                    Console.Write("\nInvalid Input! Please try again : ");
-                }
+
+                Console.Write("Invalid Input! Please try again : ");
             }
         }
 
+        /// <summary>
+        /// Validates text input (letters and spaces only).
+        /// </summary>
         public static string CheckValid()
         {
             while (true)
             {
-                string? input = Console.ReadLine();
-                if (string.IsNullOrWhiteSpace(input))
-                {
-                    Console.Write("\nInput cannot be null or empty! Please try again : ");
-                    continue;
-                }
-
-                if (Regex.IsMatch(input, @"^[A-za-z ]+$"))
-                {
+                string input = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(input) && Regex.IsMatch(input, @"^[A-Za-z ]+$"))
                     return input;
-                }
-                else
-                {
-                    Console.Write("\nInvalid Input! Please try again : ");
-                }
+
+                Console.Write("Invalid Input! Please try again : ");
             }
         }
 
-        public static Category CheckCategory()
-        {
-            Console.WriteLine("\n1.Fiction\n2.ScienceFiction\n3.Fantasy\n4.Mystery\n5.Thriller\n6.Romance\n7.Biograph\n8.History\n");
-            Console.Write("Select the Genre : ");
-            while (true)
-            {
-                int category;
-                if (int.TryParse(Console.ReadLine(), out category) && (category > 0 && category <= 8))
-                {
-                    switch (category)
-                    {
-                        case 1:
-                            return Category.Fiction;
-                        case 2:
-                            return Category.ScienceFiction;
-                        case 3:
-                            return Category.Fantasy;
-                        case 4:
-                            return Category.Mystery;
-                        case 5:
-                            return Category.Thriller;
-                        case 6:
-                            return Category.Romance;
-                        case 7:
-                            return Category.Biograph;
-                        case 8:
-                            return Category.History;
-                    }
-                }
-                else
-                {
-                    Console.Write("Invalid Input! Please try again : ");
-                }
-            }
-        }
-
+        /// <summary>
+        /// Gets a valid Book ID from user.
+        /// </summary>
         public static string CheckBookID()
         {
             Console.Write("Enter Book ID : ");
             while (true)
             {
-                string? bookID = Console.ReadLine();
-                if (!string.IsNullOrWhiteSpace(bookID))
-                {
-                    return bookID;
-                }
-                else
-                {
-                    Console.Write("Invalid Student ID! Please try again : ");
-                }
+                string input = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(input))
+                    return input.ToUpper();
+
+                Console.Write("Invalid Book ID! Please try again : ");
             }
         }
 
-        public static bool AddBook(BookManager bookManager)
+        /// <summary>
+        /// Handles adding a new book.
+        /// </summary>
+        public static void AddBook(BookManager bookManager)
         {
-            bool hasCapacity = bookManager.HasCapacity();
+            Console.Write("Book Title : ");
+            string title = CheckValid();
 
-            if (hasCapacity)
-            {
-                Console.Write("\nBook Title : ");
-                string? bookTitle = CheckValid();
-                Console.Write("Book Author Name : ");
-                string? bookAuthor = CheckValid();
-                Category bookCategory = CheckCategory();
+            Console.Write("Book Author : ");
+            string author = CheckValid();
 
-                Book book = new Book(bookTitle, bookAuthor, bookCategory);
+            Category category = CheckCategory();
 
-                bool response = bookManager.AddBook(book);
+            Book book = new Book(title, author, category);
 
-                if (response)
-                {
-                    Console.Write("\nBook Added Successfully");
-                }
-                else
-                {
-                    Console.Write("Issue Adding the book! Please try again");
-                }
-                return true;
-            }
+            if (bookManager.AddBook(book))
+                Console.WriteLine("Book added successfully.");
             else
-            {
-                Console.WriteLine("\nAddition Limit Exceeded! Please try again");
-                return false;
-            }
+                Console.WriteLine("Failed to add book.");
         }
 
+        /// <summary>
+        /// Displays details of a single book.
+        /// </summary>
         public static void ViewBookByID(BookManager bookManager)
         {
-            string? bookID = CheckBookID();
+            string bookID = CheckBookID();
             Book book = bookManager.ViewBookByID(bookID);
 
             if (book == null)
@@ -223,75 +165,68 @@ namespace Library_Book_Management_System
                 Console.Write($"Provided Book ID {bookID} is not Found!");
             }
             else
-            {
-                Console.WriteLine($"\nBook ID : {book.BookID}\nTitle : {book.Title}\nAuthor : {book.Author}\nCategory : {book.Category}\nAvailable : {book.IsAvailable}");
-            }
+                Console.WriteLine($"ID: {book.BookID}\nTitle: {book.Title}\nAuthor: {book.Author}\nCategory: {book.Category}\nAvailable: {book.IsAvailable}");
         }
 
+        /// <summary>
+        /// Displays all books in the library.
+        /// </summary>
         public static void ViewBookList(BookManager bookManager)
         {
-            Book[] book = bookManager.ViewBooks();
-            for (int i = 0; i < book.Length; i++)
+            Book[] books = bookManager.ViewBooks();
+            bool hasBooks = false;
+
+            foreach (Book book in books)
             {
-                if (book[i] == null)
+                if (book != null)
                 {
-                    Console.WriteLine("Book List is empty! Please Add some books");
-                }
-                else
-                {
-                    Console.WriteLine("Book Details : \n");
-                    for (int i = 0; i < book.Length; i++)
-                    {
-                        Console.WriteLine($"Book ID : {book[i].BookID}\nTitle : {book[i].Title}\nAuthor : {book[i].Author}\nCategory : {book[i].Category}\nAvailable : {book[i].IsAvailable}\n");
-                    }
+                    hasBooks = true;
+                    Console.WriteLine($"ID: {book.BookID}, Title: {book.Title}, Available: {book.IsAvailable}");
                 }
             }
-        }
 
-        public static void DeleteBook(BookManager bookManager)
-        {
-            string bookID = CheckBookID();
-
-            bool isDeleted = bookManager.DeleteBook(bookID);
-            if (isDeleted)
-            {
-                Console.WriteLine($"Deleted the Book ID : {bookID} Successfully");
-            }
-            else
-            {
-                Console.WriteLine($"Issue While Deleting the Book ID : {bookID}! Please try again");
-            }
+            if (!hasBooks)
+                Console.WriteLine("No books available.");
         }
 
         public static void IssueBook(BookManager bookManager)
         {
             string bookID = CheckBookID();
-
-            bool isIssued = bookManager.IssueBook(bookID);
-
-            if (isIssued)
-            {
-                Console.WriteLine("\nBook Issued Successfully! Thank you...");
-            }
-            else
-            {
-                Console.WriteLine($"Provided Book ID : {bookID} is not found or is not avaiable! Please try again");
-            }
+            Console.WriteLine(bookManager.IssueBook(bookID)
+                ? "Book issued successfully."
+                : "Book not available.");
         }
 
         public static void ReturnBook(BookManager bookManager)
         {
             string bookID = CheckBookID();
+            Console.WriteLine(bookManager.ReturnBook(bookID)
+                ? "Book returned successfully."
+                : "Book not found.");
+        }
 
-            bool isReturned = bookManager.ReturnBook(bookID);
+        public static void DeleteBook(BookManager bookManager)
+        {
+            string bookID = CheckBookID();
+            Console.WriteLine(bookManager.DeleteBook(bookID)
+                ? "Book deleted successfully."
+                : "Book not found.");
+        }
 
-            if (isReturned)
+        /// <summary>
+        /// Allows user to select a book category.
+        /// </summary>
+        public static Category CheckCategory()
+        {
+            Console.WriteLine("1.Fiction\n2.ScienceFiction\n3.Fantasy\n4.Mystery\n5.Thriller\n6.Romance\n7.Biograph\n8.History");
+            Console.Write("Select Category : ");
+
+            while (true)
             {
-                Console.WriteLine("\nBook Returned Successfully! Thank you...");
-            }
-            else
-            {
-                Console.WriteLine($"Provided Book ID : {bookID} is not found! Please try again");
+                if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= 8)
+                    return (Category)(choice - 1);
+
+                Console.Write("Invalid Input! Please try again : ");
             }
         }
     }
