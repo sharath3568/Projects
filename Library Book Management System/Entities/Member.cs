@@ -43,7 +43,6 @@ namespace Library_Book_Management_System.Entities
             {
                 throw new InvalidOperationException("No issued books to return");
             }
-
             CurrentIssuedCount--;
         }
     }

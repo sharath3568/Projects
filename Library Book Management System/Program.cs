@@ -27,7 +27,7 @@ namespace Library_Book_Management_System
             // Main application loop
             while (repeat)
             {
-                int operation = SelectOperation(bookManager.HasCapacity());
+                int operation = SelectBookOperation(bookManager.HasCapacity());
 
                 switch (operation)
                 {
@@ -58,10 +58,28 @@ namespace Library_Book_Management_System
             }
         }
 
+        ///<summary>
+        ///Displays Main Menu
+        ///</summary>
+        public static int SelectMenu()
+        {
+            Console.WriteLine("\n1. Book Management\n2. Member Management\n3. Issue / Return Book\n4.View Active Issues\n 5.Exit");
+            int choice;
+            Console.Write("Select the Option : ");
+            while(!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 5)
+            {
+                Console.Write("Invalid Input! Please try again : ");
+            }
+
+            return choice;
+        }
+
+        public static int 
+
         /// <summary>
-        /// Displays available operations and validates user choice.
+        /// Displays available Book operations and validates user choice.
         /// </summary>
-        public static int SelectOperation(bool hasCapacity)
+        public static int SelectBookOperation(bool hasCapacity)
         {
             if (hasCapacity)
             {
