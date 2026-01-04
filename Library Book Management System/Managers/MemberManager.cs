@@ -1,12 +1,122 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Library_Book_Management_System.Entities;
 
 namespace Library_Book_Management_System.Managers
 {
-    internal class MemberManager
+    public class MemberManager
     {
+        private Member[] memberList;
+        public int count = 0;
+        public MemberManager(int size)
+        {
+            memberList = new Member[size];
+        }
+
+        public bool AddMember(Member member)
+        {
+            for(int i = 0; i < memberList.Length; i++)
+            {
+                if (memberList[i] == null)
+                {
+                    member.setMemberID($"M{count + 1:D3}");
+                    memberList[i] = member;
+                    count++;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public Member GetMemberByID(string memberID)
+        {
+            memberID = memberID.ToUpper();
+            if (string.IsNullOrWhiteSpace(memberID))
+                return null;
+
+            for(int i = 0; i < memberList.Length; i++)
+            {
+                if (memberList[i] != null && memberList[i].MemberID == memberID)
+                {
+                    return memberList[i];
+                }
+            }
+            return null;
+        }
+
+        public bool MemberExists(string memberID)
+        {
+            Member member = GetMemberByID(memberID);
+
+            if(member != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool CanIssueBook(string memberID)
+        {
+            Member member = GetMemberByID(memberID);
+
+            if(member != null && member.CanIssueBook())
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool IncrementIssuedCount(string memberID)
+        {
+            Member member = GetMemberByID(memberID);
+            if (member != null && member.CanIssueBook())
+            {
+                member.IncrementIssueCount();
+                return true;
+            }
+            return false;
+        }
+
+        public bool DecrementIssuedCount(string memberID)
+        {
+            Member member = GetMemberByID(memberID);
+
+            if(member == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                member.DecrementIssueCount();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public Member[] ViewAllMembers()
+        {
+            return memberList;
+        }
+
+        public bool DeleteMember(string memberID)
+        {
+            for(int i = 0; i <  memberList.Length; i++)
+            {
+                if(memberID != null && memberList[i].MemberID == memberID.ToUpper())
+                {
+                    if (memberList[i].CurrentIssuedCount > 0)
+                    {
+                        return false;
+                    }
+
+                    memberList[i] = null;
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

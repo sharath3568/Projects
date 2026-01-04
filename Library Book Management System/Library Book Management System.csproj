@@ -8,4 +8,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="UI\BookUI\" />
+    <Folder Include="UI\MemberUI\" />
+    <Folder Include="UI\IssueUI\" />
+  </ItemGroup>
+
 </Project>
