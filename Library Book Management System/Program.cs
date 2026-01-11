@@ -14,6 +14,7 @@ namespace Library_Book_Management_System
     {
         static void Main(string[] args)
         {
+            int size;
             bool isRepeat = true;
             bool returntoMenu = false;
             Console.WriteLine("==================================");
@@ -21,16 +22,40 @@ namespace Library_Book_Management_System
             Console.WriteLine("==================================");
             Console.WriteLine("Admin Console\n");
 
+            // Get maximum Number of books from user
+            Console.Write("\nEnter the Maximum Number of Books you want to store : ");
+            while (!int.TryParse(Console.ReadLine(), out size) || size <= 0)
+            {
+                Console.Write("Invalid Input! Please try again : ");
+            }
+            BookManager bookManager = new BookManager(size);
+
+            // Get Maximum number of members from user
+            Console.Write("\nEnter the Maximum Number of Members you want to store : ");
+            while (!int.TryParse(Console.ReadLine(), out size) || size <= 0)
+            {
+                Console.Write("Invalid Input! Please try again : ");
+            }
+            MemberManager memberManager = new MemberManager(size);
+
+            // Get Maximum number of issues from user
+            Console.Write("\nEnter the Maximum Number of Issues you want to give : ");
+            while (!int.TryParse(Console.ReadLine(), out size) || size <= 0)
+            {
+                Console.Write("Invalid Input! Please try again : ");
+            }
+            IssueManager issueManager = new IssueManager(size, memberManager, bookManager);
+
             while (isRepeat)
             {
-                Console.WriteLine("1. Book Management\n2. Member Management\n3. Issue / Return Books\n4. View Active Issues\n5. Exit\n");
+                Console.WriteLine("\n1. Book Management\n2. Member Management\n3. Issue / Return Books\n4. View Active Issues\n5. Exit\n");
                 Console.Write("Select Your Operation : ");
                 if (int.TryParse(Console.ReadLine(), out int choice) && (choice > 1 || choice < 5))
                 {
                     switch (choice)
                     {
                         case 1:
-                            returntoMenu = BookManagement(choice);
+                            returntoMenu = BookManagement(choice,bookManager);
                             break;
                         case 2:
                             returntoMenu = MemberManagement(choice);
@@ -50,14 +75,13 @@ namespace Library_Book_Management_System
                 {
                     Console.Write("Invalid Value! Please try again : ");
                 }
-                if(!returntoMenu)
+                if (!returntoMenu)
                     isRepeat = CheckRepeat();
             }
         }
 
-        public static bool BookManagement(int choice)
+        public static bool BookManagement(int choice, BookManager bookManager)
         {
-            BookManager bookManager = BookUI.BookMainLogic();
             int operation = CheckOperation(choice);
 
             switch (operation)
@@ -102,18 +126,18 @@ namespace Library_Book_Management_System
         {
             while (true)
             {
-                if(choice == 1)
+                if (choice == 1)
                     Console.Write("\n1. Add Book\n2. View All Books\n3. View Book By ID\n4. Delete Book\n5. Back\n");
-                if(choice == 2)
+                if (choice == 2)
                     Console.WriteLine("\n1. Add Member\n2. View All Members\n3. View Member By ID\n4. Delete Member\n5. Back\n");
-                if(choice == 3)
+                if (choice == 3)
                     Console.WriteLine("\n1. Issue Book\n2. Return Book\n3. Back\n");
 
                 Console.Write("\nSelect the Operation : ");
 
-                if(int.TryParse(Console.ReadLine(), out int temp))
+                if (int.TryParse(Console.ReadLine(), out int temp))
                 {
-                    if((choice == 1 || choice == 2) && (temp >= 1 || temp <= 5))
+                    if ((choice == 1 || choice == 2) && (temp >= 1 || temp <= 5))
                         return temp;
                     if (choice == 3 && (temp >= 1 || temp <= 3))
                         return temp;

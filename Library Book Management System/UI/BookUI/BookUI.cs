@@ -11,20 +11,6 @@ namespace Library_Book_Management_System.UI.BookUI
 {
     public class BookUI
     {
-        public static BookManager BookMainLogic()
-        {
-            int size;
-            // Get maximum number of books from user
-            Console.Write("\nEnter the number of books you want to store : ");
-            while (!int.TryParse(Console.ReadLine(), out size) || size <= 0)
-            {
-                Console.Write("Invalid Input! Please try again : ");
-            }
-
-            BookManager bookManager = new BookManager(size);
-            return bookManager;
-        }
-
         /// <summary>
         /// Displays available Book operations and validates user choice.
         /// </summary>
@@ -53,7 +39,7 @@ namespace Library_Book_Management_System.UI.BookUI
         /// </summary>
         public static bool CheckRepeat()
         {
-            Console.Write("Do you want to continue (Yes/No): ");
+            Console.Write("\nDo you want to add another book (Yes/No): ");
             while (true)
             {
                 string input = Console.ReadLine();
@@ -103,23 +89,36 @@ namespace Library_Book_Management_System.UI.BookUI
         /// </summary>
         public static void AddBook(BookManager bookManager)
         {
-            Console.Write("\nBook Title : ");
-            string title = CheckValid();
-
-            Console.Write("Book Author : ");
-            string author = CheckValid();
-
-            Category category = CheckCategory();
-
-            Book book = new Book(title, author, category);
-
-            if (bookManager.AddBook(book))
+            bool checkRepeat = true;
+            while (checkRepeat)
             {
-                Console.WriteLine("\nBook added successfully.");
-                Console.WriteLine($"Book ID : {book.BookID}\nStatus : Available");
+                bool hasCapacity = bookManager.HasCapacity();
+                if (!hasCapacity)
+                {
+                    Console.WriteLine("\nLibrary Full");
+                    return;
+                }
+
+                Console.Write("\nBook Title : ");
+                string title = CheckValid();
+
+                Console.Write("Book Author : ");
+                string author = CheckValid();
+
+                Category category = CheckCategory();
+
+                Book book = new Book(title, author, category);
+
+                if (bookManager.AddBook(book))
+                {
+                    Console.WriteLine("\nBook added successfully.\n");
+                    Console.WriteLine($"Book ID : {book.BookID}\nStatus : Available");
+                }
+                else
+                    Console.WriteLine("\nFailed to add book.");
+
+                checkRepeat = CheckRepeat();
             }
-            else
-                Console.WriteLine("\nFailed to add book.");
         }
 
         /// <summary>
