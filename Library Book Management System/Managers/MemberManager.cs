@@ -12,6 +12,14 @@ namespace Library_Book_Management_System.Managers
             memberList = new Member[size];
         }
 
+        /// <summary>
+        /// Checks whether there is space to add more Members.
+        /// </summary>
+        public bool HasCapacity()
+        {
+            return memberList.Contains(null);
+        }
+
         public bool AddMember(Member member)
         {
             for(int i = 0; i < memberList.Length; i++)

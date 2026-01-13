@@ -1,5 +1,7 @@
 ﻿using Library_Book_Management_System.Entities;
 using Library_Book_Management_System.Managers;
+using Library_Book_Management_System.UI;
+using Library_Book_Management_System.UI.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,62 +13,6 @@ namespace Library_Book_Management_System.UI.BookUI
 {
     public class BookUI
     {
-        /// <summary>
-        /// Displays available Book operations and validates user choice.
-        /// </summary>
-        public static int SelectBookOperation(bool hasCapacity)
-        {
-            if (hasCapacity)
-            {
-                Console.WriteLine("\n1.Add Book\n2.View Book List\n3.View Book by ID\n4.Issue Book\n5.Return Book\n6.Delete Book\n7.Exit");
-            }
-            else
-            {
-                Console.WriteLine("\n2.View Book List\n3.View Book by ID\n4.Issue Book\n5.Return Book\n6.Delete Book\n7.Exit");
-            }
-            int choice;
-            Console.Write("Select the operation : ");
-
-            while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 7)
-            {
-                Console.Write("Invalid Input! Please try again : ");
-            }
-            return choice;
-        }
-
-        /// <summary>
-        /// Asks user whether they want to continue.
-        /// </summary>
-        public static bool CheckRepeat()
-        {
-            Console.Write("\nDo you want to add another book (Yes/No): ");
-            while (true)
-            {
-                string input = Console.ReadLine();
-                if (string.Equals(input, "Yes", StringComparison.OrdinalIgnoreCase))
-                    return true;
-
-                if (string.Equals(input, "No", StringComparison.OrdinalIgnoreCase))
-                    return false;
-
-                Console.Write("Invalid Input! Please try again : ");
-            }
-        }
-
-        /// <summary>
-        /// Validates text input (letters and spaces only).
-        /// </summary>
-        public static string CheckValid()
-        {
-            while (true)
-            {
-                string input = Console.ReadLine();
-                if (!string.IsNullOrWhiteSpace(input) && Regex.IsMatch(input, @"^[A-Za-z ]+$"))
-                    return input;
-
-                Console.Write("Invalid Input! Please try again : ");
-            }
-        }
 
         /// <summary>
         /// Gets a valid Book ID from user.
@@ -89,21 +35,20 @@ namespace Library_Book_Management_System.UI.BookUI
         /// </summary>
         public static void AddBook(BookManager bookManager)
         {
-            bool checkRepeat = true;
-            while (checkRepeat)
+            while (true)
             {
                 bool hasCapacity = bookManager.HasCapacity();
                 if (!hasCapacity)
                 {
-                    Console.WriteLine("\nLibrary Full");
+                    Console.WriteLine("\nLibrary Full Returning to Book Menu");
                     return;
                 }
 
                 Console.Write("\nBook Title : ");
-                string title = CheckValid();
+                string title = HelperUI.CheckValidString();
 
                 Console.Write("Book Author : ");
-                string author = CheckValid();
+                string author = HelperUI.CheckValidString();
 
                 Category category = CheckCategory();
 
@@ -115,9 +60,15 @@ namespace Library_Book_Management_System.UI.BookUI
                     Console.WriteLine($"Book ID : {book.BookID}\nStatus : Available");
                 }
                 else
+                {
                     Console.WriteLine("\nFailed to add book.");
+                    return;
+                }
 
-                checkRepeat = CheckRepeat();
+                if (!HelperUI.CheckRepeat("BookManagement"))
+                {
+                    return;
+                }
             }
         }
 
@@ -144,18 +95,36 @@ namespace Library_Book_Management_System.UI.BookUI
         {
             Book[] books = bookManager.ViewBooks();
             bool hasBooks = false;
-
+            Console.WriteLine();
+            Console.WriteLine($"{ "Book ID", -8} | { "Title", -35} | {"Author", -20} | {"Status", -10}");
+            Console.WriteLine(new string('-',85));
             foreach (Book book in books)
             {
-                if (book != null)
+                if (book == null)
+                    continue;
+
+                hasBooks = true;
+
+                Console.Write($"{ book.BookID, -8} | { book.Title, -35} | { book.Author, -20} | ");
+
+                if (book.IsAvailable)
                 {
-                    hasBooks = true;
-                    Console.WriteLine($"ID: {book.BookID}, Title: {book.Title}, Available: {book.IsAvailable}");
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"{ "Available", -10}");
                 }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"{ "Issued", -10}");
+                }
+
+                Console.ResetColor();
             }
 
             if (!hasBooks)
                 Console.WriteLine("No books available.");
+
+            Console.WriteLine();
         }
 
         public static void IssueBook(BookManager bookManager)
