@@ -13,23 +13,6 @@ namespace Library_Book_Management_System.UI.BookUI
 {
     public class BookUI
     {
-
-        /// <summary>
-        /// Gets a valid Book ID from user.
-        /// </summary>
-        public static string CheckBookID()
-        {
-            Console.Write("Enter Book ID : ");
-            while (true)
-            {
-                string input = Console.ReadLine();
-                if (!string.IsNullOrWhiteSpace(input))
-                    return input.ToUpper();
-
-                Console.Write("Invalid Book ID! Please try again : ");
-            }
-        }
-
         /// <summary>
         /// Handles adding a new book.
         /// </summary>
@@ -77,7 +60,7 @@ namespace Library_Book_Management_System.UI.BookUI
         /// </summary>
         public static void ViewBookByID(BookManager bookManager)
         {
-            string bookID = CheckBookID();
+            string bookID = HelperUI.CheckID();
             Book book = bookManager.ViewBookByID(bookID);
 
             if (book == null)
@@ -85,7 +68,11 @@ namespace Library_Book_Management_System.UI.BookUI
                 Console.Write($"Provided Book ID {bookID} is not Found!");
             }
             else
-                Console.WriteLine($"ID: {book.BookID}\nTitle: {book.Title}\nAuthor: {book.Author}\nCategory: {book.Category}\nAvailable: {book.IsAvailable}");
+            {
+                Console.WriteLine($"{"Book ID",-8} | {"Title",-35} | {"Author",-20} | {"Category",-15} | {"Status",-10}");
+                Console.WriteLine(new string('-', 85));
+                Console.WriteLine($"{ book.BookID, -8} | {book.Title, -35} | {book.Author, -20} | {book.Category, -15} | { (book.IsAvailable ? "Available" : "Issued"), -10}");
+            }
         }
 
         /// <summary>
@@ -96,7 +83,7 @@ namespace Library_Book_Management_System.UI.BookUI
             Book[] books = bookManager.ViewBooks();
             bool hasBooks = false;
             Console.WriteLine();
-            Console.WriteLine($"{ "Book ID", -8} | { "Title", -35} | {"Author", -20} | {"Status", -10}");
+            Console.WriteLine($"{ "Book ID", -8} | { "Title", -35} | {"Author", -20} | {"Category", -15} | {"Status", -10}");
             Console.WriteLine(new string('-',85));
             foreach (Book book in books)
             {
@@ -105,7 +92,7 @@ namespace Library_Book_Management_System.UI.BookUI
 
                 hasBooks = true;
 
-                Console.Write($"{ book.BookID, -8} | { book.Title, -35} | { book.Author, -20} | ");
+                Console.Write($"{ book.BookID, -8} | { book.Title, -35} | { book.Author, -20} | { book.Category, -15} | ");
 
                 if (book.IsAvailable)
                 {
@@ -129,7 +116,7 @@ namespace Library_Book_Management_System.UI.BookUI
 
         public static void IssueBook(BookManager bookManager)
         {
-            string bookID = CheckBookID();
+            string bookID = HelperUI.CheckID();
             Console.WriteLine(bookManager.IssueBook(bookID)
                 ? "Book issued successfully."
                 : "Book not available.");
@@ -137,7 +124,7 @@ namespace Library_Book_Management_System.UI.BookUI
 
         public static void ReturnBook(BookManager bookManager)
         {
-            string bookID = CheckBookID();
+            string bookID = HelperUI.CheckID();
             Console.WriteLine(bookManager.ReturnBook(bookID)
                 ? "Book returned successfully."
                 : "Book not found.");
@@ -145,7 +132,7 @@ namespace Library_Book_Management_System.UI.BookUI
 
         public static void DeleteBook(BookManager bookManager)
         {
-            string bookID = CheckBookID();
+            string bookID = HelperUI.CheckID();
             Console.WriteLine(bookManager.DeleteBook(bookID)
                 ? "Book deleted successfully."
                 : "Book not found.");

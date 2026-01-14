@@ -61,5 +61,21 @@ namespace Library_Book_Management_System.UI.Helper
                 Console.Write("Invalid Input! Please try again : ");
             }
         }
+
+        /// <summary>
+        /// Gets a valid ID from user.
+        /// </summary>
+        public static string CheckID()
+        {
+            Console.Write("Enter ID : ");
+            while (true)
+            {
+                string input = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(input))
+                    return input.ToUpper();
+
+                Console.Write("Invalid ID! Please try again : ");
+            }
+        }
     }
 }

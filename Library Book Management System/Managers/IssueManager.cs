@@ -18,6 +18,14 @@ namespace Library_Book_Management_System.Managers
             this.bookManager = bookManager;
         }
 
+        /// <summary>
+        /// Checks whether there is space to add more Isssues.
+        /// </summary>
+        public bool HasCapacity()
+        {
+            return issueList.Contains(null);
+        }
+
         public bool IssueBook(string bookID, string memberID)
         {
             if(string.IsNullOrWhiteSpace(bookID) && string.IsNullOrWhiteSpace(memberID))
