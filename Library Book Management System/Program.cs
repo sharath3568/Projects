@@ -1,6 +1,7 @@
 ﻿using Library_Book_Management_System.Entities;
 using Library_Book_Management_System.Managers;
 using Library_Book_Management_System.UI.BookUI;
+using Library_Book_Management_System.UI.IssueUI;
 using Library_Book_Management_System.UI.MemberUI;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
@@ -65,7 +66,7 @@ namespace Library_Book_Management_System
                             returntoMenu = MemberManagement(choice, memberManager);
                             break;
                         case 3:
-                            returntoMenu = IssueReturnManagement(choice, issueManager);
+                            returntoMenu = IssueReturnManagement(choice, issueManager,memberManager);
                             break;
                         case 4:
                             ViewActiveIssues();
@@ -122,16 +123,16 @@ namespace Library_Book_Management_System
                 switch (operation)
                 {
                     case 1:
-                        //MemberUI.AddMember(memberManager);
+                        MemberUI.AddMember(memberManager);
                         break;
                     case 2:
-                        //MemberUI.ViewAllMembers(memberManager);
+                        MemberUI.ViewAllMembers(memberManager);
                         break;
                     case 3:
-                        //.ViewMemberByID(memberManager);
+                        MemberUI.ViewMemberByID(memberManager);
                         break;
                     case 4:
-                        //MemberUI.DeleteMember(memberManager);
+                        MemberUI.DeleteMember(memberManager);
                         break;
                     case 5:
                         Console.WriteLine("Returning to Main Menu");
@@ -140,11 +141,25 @@ namespace Library_Book_Management_System
             }
         }
 
-        public static bool IssueReturnManagement(int choice, IssueManager issueManager)
+        public static bool IssueReturnManagement(int choice, IssueManager issueManager, MemberManager memberManager)
         {
-            bool canAdd = true;
-            int operation = CheckOperation(choice, canAdd);
-            return false;
+            while (true)
+            {
+                bool canAdd = issueManager.HasCapacity();
+                int operation = CheckOperation(choice, canAdd);
+
+                switch (operation)
+                {
+                    case 1:
+                        IssueUI.IssueBook(issueManager, memberManager);
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        Console.WriteLine("Back to Main Menu");
+                        return true;
+                }
+            }
         }
 
         public static void ViewActiveIssues()
