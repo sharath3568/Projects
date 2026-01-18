@@ -1,4 +1,5 @@
 ﻿using Library_Book_Management_System.Entities;
+using Library_Book_Management_System.Interfaces;
 using Library_Book_Management_System.Managers;
 using Library_Book_Management_System.UI.Helper;
 using System;
@@ -56,7 +57,7 @@ namespace Library_Book_Management_System.UI
             }
         }
 
-        public static void ReturnBook(IssueManager issueManager, MemberManager memberManager, BookManager bookManager)
+        public static void ReturnBook(IssueManager issueManager, MemberManager memberManager, IBookManager bookManager)
         {
             while (true)
             {

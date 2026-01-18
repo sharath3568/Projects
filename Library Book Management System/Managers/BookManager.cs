@@ -1,4 +1,5 @@
 ﻿using Library_Book_Management_System.Entities;
+using Library_Book_Management_System.Interfaces;
 using System.Linq;
 
 namespace Library_Book_Management_System.Managers
@@ -7,7 +8,7 @@ namespace Library_Book_Management_System.Managers
     /// Manages all book-related operations such as
     /// add, search, issue, return, and delete.
     /// </summary>
-    public class BookManager
+    public class BookManager : IBookManager
     {
         /// <summary>
         /// Fixed-size collection of books.
@@ -90,38 +91,6 @@ namespace Library_Book_Management_System.Managers
         public bool HasCapacity()
         {
             return bookList.Contains(null);
-        }
-
-        /// <summary>
-        /// Issues a book if it exists and is available.
-        /// </summary>
-        public bool IssueBook(string bookID)
-        {
-            Book book = FindBookByID(bookID);
-
-            if (book == null || !book.IsAvailable)
-            {
-                return false;
-            }
-
-            book.IsAvailable = false;
-            return true;
-        }
-
-        /// <summary>
-        /// Marks a book as returned.
-        /// </summary>
-        public bool ReturnBook(string bookID)
-        {
-            Book book = FindBookByID(bookID);
-
-            if (book == null)
-            {
-                return false;
-            }
-
-            book.IsAvailable = true;
-            return true;
         }
 
         /// <summary>
