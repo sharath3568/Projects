@@ -1,5 +1,6 @@
 ﻿using System;
 using Library_Book_Management_System.Entities;
+using Library_Book_Management_System.Interfaces;
 using Library_Book_Management_System.Managers;
 
 namespace Library_Book_Management_System.Managers
@@ -8,11 +9,11 @@ namespace Library_Book_Management_System.Managers
     {
         private IssueRecord[] issueList;
         private MemberManager memberManager;
-        private BookManager bookManager;
+        private IBookManager bookManager;
         public string LastErrorMessage { get; private set; } = string.Empty;
         private int count = 0;
 
-        public IssueManager(int size, MemberManager memberManager, BookManager bookManager)
+        public IssueManager(int size, MemberManager memberManager, IBookManager bookManager)
         {
             issueList = new IssueRecord[size];
             this.memberManager = memberManager;

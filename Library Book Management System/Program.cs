@@ -1,4 +1,5 @@
 ﻿using Library_Book_Management_System.Entities;
+using Library_Book_Management_System.Interfaces;
 using Library_Book_Management_System.Managers;
 using Library_Book_Management_System.UI;
 using System.Security.Cryptography.X509Certificates;
@@ -27,7 +28,7 @@ namespace Library_Book_Management_System
                 Console.Write("Invalid Input! Please try again : ");
             }
             //Initializing Book Manager
-            BookManager bookManager = new BookManager(size);
+            IBookManager bookManager = new BookManager(size);
 
             // Get Maximum number of members from user
             Console.Write("\nEnter the Maximum Number of Members you want to store : ");
@@ -79,7 +80,7 @@ namespace Library_Book_Management_System
             }
         }
 
-        public static void BookManagement(int choice, BookManager bookManager)
+        public static void BookManagement(int choice, IBookManager bookManager)
         {
             while (true)
             {
@@ -135,7 +136,7 @@ namespace Library_Book_Management_System
             }
         }
 
-        public static void IssueReturnManagement(int choice, IssueManager issueManager, MemberManager memberManager, BookManager bookManager)
+        public static void IssueReturnManagement(int choice, IssueManager issueManager, MemberManager memberManager, IBookManager bookManager)
         {
             while (true)
             {
