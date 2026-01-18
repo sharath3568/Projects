@@ -7,25 +7,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Library_Book_Management_System.UI.MemberUI
+namespace Library_Book_Management_System.UI
 {
     internal class MemberUI
     {
-        public static void AddMember(MemberManager memberManager)
+        public static void AddMember(MemberManager memberManager, bool isAddMemberfromIssue)
         {
             while (true)
             {
                 bool hasCapacity = memberManager.HasCapacity();
                 if (!hasCapacity)
                 {
-                    Console.WriteLine("\nSlots are occupied");
+                    Console.WriteLine("\nMember Capacity Reached");
                     return;
                 }
 
                 Console.Write("Member Name : ");
                 string memberName = HelperUI.CheckValidString();
 
-                Console.Write("Maximum Allowed Books");
+                Console.Write("Maximum Allowed Books : ");
                 int maxAllowedBooks = HelperUI.CheckValidInt();
 
                 Member member = new Member(memberName,maxAllowedBooks);
@@ -41,9 +41,12 @@ namespace Library_Book_Management_System.UI.MemberUI
                     return;
                 }
 
-                if (!HelperUI.CheckRepeat("MemberManagement"))
+                if (!isAddMemberfromIssue)
                 {
-                    return;
+                    if (!HelperUI.CheckRepeat("MemberManagement"))
+                    {
+                        return;
+                    }
                 }
             }
         }
@@ -55,6 +58,7 @@ namespace Library_Book_Management_System.UI.MemberUI
 
             Console.WriteLine();
             Console.WriteLine($"{ "Member ID", -10} | { "Member Name", -30} | { "Maximum Allowed Books", -25} | { "Current Issued Count", -20}");
+            Console.WriteLine(new string('-',-95));
             
             foreach(var member in members)
             {
@@ -73,7 +77,7 @@ namespace Library_Book_Management_System.UI.MemberUI
 
         public static void ViewMemberByID(MemberManager memberManager)
         {
-            string memberID = HelperUI.CheckID();
+            string memberID = HelperUI.CheckID("Member");
             Member member = memberManager.GetMemberByID(memberID);
 
             if (member == null)
@@ -90,7 +94,7 @@ namespace Library_Book_Management_System.UI.MemberUI
 
         public static void DeleteMember(MemberManager memberManager)
         {
-            string memberID = HelperUI.CheckID();
+            string memberID = HelperUI.CheckID("Member");
             bool isDeleted = memberManager.DeleteMember(memberID);
 
             if(isDeleted)
@@ -99,7 +103,7 @@ namespace Library_Book_Management_System.UI.MemberUI
             }
             else
             {
-                Console.WriteLine($"\nFailed to delete Member with ID : {memberID}. It may not exist.\n");
+                Console.WriteLine($"\nFailed to delete Member with ID : {memberID}. It may not exist or has active issues\n");
             }
         }
 

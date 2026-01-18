@@ -65,9 +65,9 @@ namespace Library_Book_Management_System.UI.Helper
         /// <summary>
         /// Gets a valid ID from user.
         /// </summary>
-        public static string CheckID()
+        public static string CheckID(string type)
         {
-            Console.Write("Enter ID : ");
+            Console.Write($"Enter {type} ID : ");
             while (true)
             {
                 string input = Console.ReadLine();

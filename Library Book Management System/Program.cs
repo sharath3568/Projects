@@ -1,8 +1,6 @@
 ﻿using Library_Book_Management_System.Entities;
 using Library_Book_Management_System.Managers;
-using Library_Book_Management_System.UI.BookUI;
-using Library_Book_Management_System.UI.IssueUI;
-using Library_Book_Management_System.UI.MemberUI;
+using Library_Book_Management_System.UI;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 
@@ -17,8 +15,6 @@ namespace Library_Book_Management_System
         static void Main(string[] args)
         {
             int size;
-            bool isRepeat = true;
-            bool returntoMenu = false;
             Console.WriteLine("==================================");
             Console.WriteLine(" Library Management System ");
             Console.WriteLine("==================================");
@@ -51,41 +47,39 @@ namespace Library_Book_Management_System
             //Initializing Issue Manager
             IssueManager issueManager = new IssueManager(size, memberManager, bookManager);
 
-            while (isRepeat)
+            while (true)
             {
                 Console.WriteLine("\n1. Book Management\n2. Member Management\n3. Issue / Return Books\n4. View Active Issues\n5. Exit\n");
                 Console.Write("Select Your Operation : ");
-                if (int.TryParse(Console.ReadLine(), out int choice) && (choice >= 1 && choice <= 5))
-                {
-                    switch (choice)
-                    {
-                        case 1:
-                            returntoMenu = BookManagement(choice, bookManager);
-                            break;
-                        case 2:
-                            returntoMenu = MemberManagement(choice, memberManager);
-                            break;
-                        case 3:
-                            returntoMenu = IssueReturnManagement(choice, issueManager,memberManager);
-                            break;
-                        case 4:
-                            ViewActiveIssues();
-                            break;
-                        case 5:
-                            Console.WriteLine("\nThank you for using Library Management System! Have a nice day......");
-                            return;
-                    }
-                }
-                else
+
+                if (!int.TryParse(Console.ReadLine(), out int choice) || choice < 1 || choice > 5)
                 {
                     Console.Write("Invalid Value! Please try again : ");
+                    continue;
                 }
-                if (!returntoMenu)
-                    isRepeat = CheckRepeat();
+
+                switch (choice)
+                {
+                    case 1:
+                        BookManagement(choice, bookManager);
+                        break;
+                    case 2:
+                        MemberManagement(choice, memberManager);
+                        break;
+                    case 3:
+                        IssueReturnManagement(choice, issueManager, memberManager, bookManager);
+                        break;
+                    case 4:
+                        ViewActiveIssues(issueManager);
+                        break;
+                    case 5:
+                        Console.WriteLine("\nThank you for using Library Management System! Have a nice day......");
+                        return;
+                }
             }
         }
 
-        public static bool BookManagement(int choice, BookManager bookManager)
+        public static void BookManagement(int choice, BookManager bookManager)
         {
             while (true)
             {
@@ -108,12 +102,12 @@ namespace Library_Book_Management_System
                         break;
                     case 5:
                         Console.WriteLine("\nGoing to Main Menu.....\n");
-                        return true;
+                        return;
                 }
             }
         }
 
-        public static bool MemberManagement(int choice, MemberManager memberManager)
+        public static void MemberManagement(int choice, MemberManager memberManager)
         {
             while (true)
             {
@@ -123,7 +117,7 @@ namespace Library_Book_Management_System
                 switch (operation)
                 {
                     case 1:
-                        MemberUI.AddMember(memberManager);
+                        MemberUI.AddMember(memberManager, false);
                         break;
                     case 2:
                         MemberUI.ViewAllMembers(memberManager);
@@ -136,12 +130,12 @@ namespace Library_Book_Management_System
                         break;
                     case 5:
                         Console.WriteLine("Returning to Main Menu");
-                        return true;
+                        return;
                 }
             }
         }
 
-        public static bool IssueReturnManagement(int choice, IssueManager issueManager, MemberManager memberManager)
+        public static void IssueReturnManagement(int choice, IssueManager issueManager, MemberManager memberManager, BookManager bookManager)
         {
             while (true)
             {
@@ -154,40 +148,64 @@ namespace Library_Book_Management_System
                         IssueUI.IssueBook(issueManager, memberManager);
                         break;
                     case 2:
+                        IssueUI.ReturnBook(issueManager, memberManager, bookManager);
                         break;
                     case 3:
                         Console.WriteLine("Back to Main Menu");
-                        return true;
+                        return;
                 }
             }
         }
 
-        public static void ViewActiveIssues()
+        public static void ViewActiveIssues(IssueManager issueManager)
         {
+            IssueUI.ViewActiveIssues(issueManager);
 
+            Console.WriteLine("Going to Main Menu");
         }
 
         public static int CheckOperation(int choice, bool canAdd)
         {
             PrintMenu(choice, canAdd);
+
             while (true)
             {
-                if (int.TryParse(Console.ReadLine(), out int temp))
+                if (!int.TryParse(Console.ReadLine(), out int input))
                 {
-                    if ((choice == 1 && !canAdd) && temp == 1)
+                    Console.Write("Invalid Input! Please try again : ");
+                    continue;
+                }
+
+                // BOOK / MEMBER MANAGEMENT
+                if (choice == 1 || choice == 2)
+                {
+                    if (!canAdd && input == 1)
                     {
-                        Console.WriteLine("\nInvalid Input! Please try again");
+                        Console.Write("Operation not allowed! Capacity full : ");
                         continue;
                     }
-                    else if ((choice == 1 || choice == 2) && (temp >= 1 && temp <= 5))
-                        return temp;
-                    if (choice == 3 && (temp >= 1 && temp <= 3))
-                        return temp;
 
-                    Console.Write("Invalid Input! Please try again : ");
+                    if (input >= 1 && input <= 5)
+                        return input;
                 }
+
+                // ISSUE MANAGEMENT
+                if (choice == 3)
+                {
+                    if (!canAdd && input == 1)
+                    {
+                        Console.Write("Cannot issue more books (Issue limit reached) : ");
+                        continue;
+                    }
+
+                    if (input >= 1 && input <= 3)
+                        return input;
+                }
+
+                Console.Write("Invalid Input! Please try again : ");
             }
         }
+
 
         public static void PrintMenu(int choice, bool canAdd)
         {
@@ -203,7 +221,7 @@ namespace Library_Book_Management_System
 
                 case 2:
                     if (canAdd)
-                        Console.WriteLine("\n1.Add Member");
+                        Console.WriteLine("\n1. Add Member");
                     Console.WriteLine("2. View All Members\n3. View Member By ID\n4. Delete Member\n5. Back\n");
                     break;
 
@@ -215,24 +233,5 @@ namespace Library_Book_Management_System
             }
             Console.Write("\nSelect the Operation : ");
         }
-
-        public static bool CheckRepeat()
-        {
-            Console.Write("\nDo you want to repeat the operation? Yes/No : ");
-            while (true)
-            {
-                string? input = Console.ReadLine();
-                if (string.Equals(input, "Yes", StringComparison.OrdinalIgnoreCase))
-                    return true;
-                if (string.Equals(input, "No", StringComparison.OrdinalIgnoreCase))
-                {
-                    Console.WriteLine("\nThank you for using Library Management System! Have a nice day......");
-                    return false;
-                }
-
-                Console.Write("Invalid Input! Please try again : ");
-            }
-        }
-
     }
 }

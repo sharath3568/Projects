@@ -18,7 +18,7 @@ namespace Library_Book_Management_System.Entities
             MaxAllowedBooks = maxallowedbooks;
         }
 
-        internal void setMemberID(string memberID)
+        internal void SetMemberID(string memberID)
         {
             MemberID = memberID;
         }
