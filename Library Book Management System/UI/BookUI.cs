@@ -1,6 +1,5 @@
 ﻿using Library_Book_Management_System.Entities;
 using Library_Book_Management_System.Managers;
-using Library_Book_Management_System.UI;
 using Library_Book_Management_System.UI.Helper;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Library_Book_Management_System.UI.BookUI
+namespace Library_Book_Management_System.UI
 {
     public class BookUI
     {
@@ -60,7 +59,7 @@ namespace Library_Book_Management_System.UI.BookUI
         /// </summary>
         public static void ViewBookByID(BookManager bookManager)
         {
-            string bookID = HelperUI.CheckID();
+            string bookID = HelperUI.CheckID("Book");
             Book book = bookManager.ViewBookByID(bookID);
 
             if (book == null)
@@ -84,7 +83,7 @@ namespace Library_Book_Management_System.UI.BookUI
             bool hasBooks = false;
             Console.WriteLine();
             Console.WriteLine($"{ "Book ID", -8} | { "Title", -35} | {"Author", -20} | {"Category", -15} | {"Status", -10}");
-            Console.WriteLine(new string('-',85));
+            Console.WriteLine(new string('-',95));
             foreach (Book book in books)
             {
                 if (book == null)
@@ -116,7 +115,7 @@ namespace Library_Book_Management_System.UI.BookUI
 
         public static void IssueBook(BookManager bookManager)
         {
-            string bookID = HelperUI.CheckID();
+            string bookID = HelperUI.CheckID("Book");
             Console.WriteLine(bookManager.IssueBook(bookID)
                 ? "Book issued successfully."
                 : "Book not available.");
@@ -124,7 +123,7 @@ namespace Library_Book_Management_System.UI.BookUI
 
         public static void ReturnBook(BookManager bookManager)
         {
-            string bookID = HelperUI.CheckID();
+            string bookID = HelperUI.CheckID("Book");
             Console.WriteLine(bookManager.ReturnBook(bookID)
                 ? "Book returned successfully."
                 : "Book not found.");
@@ -132,7 +131,7 @@ namespace Library_Book_Management_System.UI.BookUI
 
         public static void DeleteBook(BookManager bookManager)
         {
-            string bookID = HelperUI.CheckID();
+            string bookID = HelperUI.CheckID("Book");
             Console.WriteLine(bookManager.DeleteBook(bookID)
                 ? "Book deleted successfully."
                 : "Book not found.");

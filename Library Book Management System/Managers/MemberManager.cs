@@ -6,7 +6,7 @@ namespace Library_Book_Management_System.Managers
     public class MemberManager
     {
         private Member[] memberList;
-        public int count = 0;
+        private int count = 0;
         public MemberManager(int size)
         {
             memberList = new Member[size];
@@ -26,7 +26,7 @@ namespace Library_Book_Management_System.Managers
             {
                 if (memberList[i] == null)
                 {
-                    member.setMemberID($"M{count + 1:D3}");
+                    member.SetMemberID($"M{count + 1:D3}");
                     memberList[i] = member;
                     count++;
                     return true;
