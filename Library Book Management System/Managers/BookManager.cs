@@ -8,7 +8,7 @@ namespace Library_Book_Management_System.Managers
     /// Manages all book-related operations such as
     /// add, search, issue, return, and delete.
     /// </summary>
-    public class BookManager : IBookManager
+    public class BookManager : IBookManager, IBookLookup
     {
         /// <summary>
         /// Fixed-size collection of books.
