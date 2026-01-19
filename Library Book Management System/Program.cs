@@ -28,7 +28,11 @@ namespace Library_Book_Management_System
                 Console.Write("Invalid Input! Please try again : ");
             }
             //Initializing Book Manager
-            IBookManager bookManager = new BookManager(size);
+            BookManager bookManager = new BookManager(size);
+
+            IBookManager bookUIManager = bookManager;
+
+            IBookLookup bookLookup = bookManager;
 
             // Get Maximum number of members from user
             Console.Write("\nEnter the Maximum Number of Members you want to store : ");
@@ -46,7 +50,7 @@ namespace Library_Book_Management_System
                 Console.Write("Invalid Input! Please try again : ");
             }
             //Initializing Issue Manager
-            IssueManager issueManager = new IssueManager(size, memberManager, bookManager);
+            IssueManager issueManager = new IssueManager(size, memberManager, bookLookup);
 
             while (true)
             {
