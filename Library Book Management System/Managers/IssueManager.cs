@@ -1,5 +1,6 @@
 ﻿using System;
 using Library_Book_Management_System.Entities;
+using Library_Book_Management_System.Interfaces;
 using Library_Book_Management_System.Managers;
 
 namespace Library_Book_Management_System.Managers
@@ -8,15 +9,15 @@ namespace Library_Book_Management_System.Managers
     {
         private IssueRecord[] issueList;
         private MemberManager memberManager;
-        private BookManager bookManager;
+        private IBookLookup bookLookup;
         public string LastErrorMessage { get; private set; } = string.Empty;
         private int count = 0;
 
-        public IssueManager(int size, MemberManager memberManager, BookManager bookManager)
+        public IssueManager(int size, MemberManager memberManager, IBookLookup bookLookup)
         {
             issueList = new IssueRecord[size];
             this.memberManager = memberManager;
-            this.bookManager = bookManager;
+            this.bookLookup = bookLookup;
         }
 
         /// <summary>
@@ -45,7 +46,7 @@ namespace Library_Book_Management_System.Managers
 
             Member member = memberManager.GetMemberByID(memberID);
             //Validate Book
-            Book book = bookManager.FindBookByID(bookID);
+            Book book = bookLookup.FindBookByID(bookID);
 
             //Validate Member
             if (member == null)
@@ -131,7 +132,7 @@ namespace Library_Book_Management_System.Managers
 
                 if(record != null && record.IssueID == issueID && !record.IsReturned)
                 {
-                    Book book = bookManager.FindBookByID(record.BookID);
+                    Book book = bookLookup.FindBookByID(record.BookID);
                     Member member = memberManager.GetMemberByID(record.MemberID);
 
                     if (book == null)

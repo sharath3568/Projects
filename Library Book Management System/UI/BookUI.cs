@@ -1,21 +1,13 @@
 ﻿using Library_Book_Management_System.Entities;
+using Library_Book_Management_System.Interfaces;
 using Library_Book_Management_System.Managers;
 using Library_Book_Management_System.UI.Helper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Library_Book_Management_System.UI
 {
     public class BookUI
     {
-        /// <summary>
-        /// Handles adding a new book.
-        /// </summary>
-        public static void AddBook(BookManager bookManager)
+        public static void AddBook(IBookManager bookManager)
         {
             while (true)
             {
@@ -54,10 +46,7 @@ namespace Library_Book_Management_System.UI
             }
         }
 
-        /// <summary>
-        /// Displays details of a single book.
-        /// </summary>
-        public static void ViewBookByID(BookManager bookManager)
+        public static void ViewBookByID(IBookManager bookManager)
         {
             string bookID = HelperUI.CheckID("Book");
             Book book = bookManager.ViewBookByID(bookID);
@@ -74,10 +63,7 @@ namespace Library_Book_Management_System.UI
             }
         }
 
-        /// <summary>
-        /// Displays all books in the library.
-        /// </summary>
-        public static void ViewBookList(BookManager bookManager)
+        public static void ViewBookList(IBookManager bookManager)
         {
             Book[] books = bookManager.ViewBooks();
             bool hasBooks = false;
@@ -113,23 +99,7 @@ namespace Library_Book_Management_System.UI
             Console.WriteLine();
         }
 
-        public static void IssueBook(BookManager bookManager)
-        {
-            string bookID = HelperUI.CheckID("Book");
-            Console.WriteLine(bookManager.IssueBook(bookID)
-                ? "Book issued successfully."
-                : "Book not available.");
-        }
-
-        public static void ReturnBook(BookManager bookManager)
-        {
-            string bookID = HelperUI.CheckID("Book");
-            Console.WriteLine(bookManager.ReturnBook(bookID)
-                ? "Book returned successfully."
-                : "Book not found.");
-        }
-
-        public static void DeleteBook(BookManager bookManager)
+        public static void DeleteBook(IBookManager bookManager)
         {
             string bookID = HelperUI.CheckID("Book");
             Console.WriteLine(bookManager.DeleteBook(bookID)
@@ -137,9 +107,6 @@ namespace Library_Book_Management_System.UI
                 : "Book not found.");
         }
 
-        /// <summary>
-        /// Allows user to select a book category.
-        /// </summary>
         public static Category CheckCategory()
         {
             Console.WriteLine("\n1.Fiction\n2.ScienceFiction\n3.Fantasy\n4.Mystery\n5.Thriller\n6.Romance\n7.Biograph\n8.History");
